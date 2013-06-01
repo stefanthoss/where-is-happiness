@@ -1,0 +1,50 @@
+require 'tweetstream'
+require 'yajl'
+require 'yaml'
+require 'mysql2'
+
+config = YAML.load_file('config.yml')
+
+TweetStream.configure do |twitter_config|
+  twitter_config.consumer_key       = config['twitter']['consumer_key'].to_s
+  twitter_config.consumer_secret    = config['twitter']['consumer_secret'].to_s
+  twitter_config.oauth_token        = config['twitter']['oauth_token'].to_s
+  twitter_config.oauth_token_secret = config['twitter']['oauth_token_secret'].to_s
+  twitter_config.auth_method        = :oauth
+end
+
+# CREATE TABLE wih.tweets (id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, text VARCHAR(255), time DATETIME, lat DOUBLE, lng DOUBLE);
+
+client = Mysql2::Client.new(:host => config['db']['host'],
+  :username => config['db']['username'],
+  :password => config['db']['password'],
+  :database => config['db']['database'],
+  :host => config['db']['host'])
+
+tweetstream = TweetStream::Client.new
+
+tweetstream.on_error do |message|
+  puts "Error: #{message}"
+end
+
+tweetstream.on_limit do |skip_count|
+  puts "Limit: #{skip_count}"
+end
+
+tweetstream.on_reconnect do |timeout, retries|
+  puts "Timeout: #{timeout}, retries: #{retries}"
+end
+
+#SW: 37.234702,-122.519746
+#NE: 37.823887,-121.839967
+tweetstream.locations("-122.519746,37.234702,-121.839967,37.823887") do |status|
+  unless status.geo.nil?
+    lat = status.geo.coordinates[0].to_f
+    lng = status.geo.coordinates[1].to_f
+  else
+    lat = status.place.bounding_box.coordinates[0][0][1].to_f
+    lng = status.place.bounding_box.coordinates[0][0][0].to_f
+  end
+  # puts "#{status.created_at} - #{lat},#{lng} - #{status.text}"
+  query = "INSERT INTO tweets (text, time, lat, lng) VALUES (#{status.text}, #{status.created_at}, #{lat}, #{lng})"
+end
