@@ -14,7 +14,7 @@ TweetStream.configure do |twitter_config|
 end
 
 def format_time time
- time.nil? ?  'NULL' : "\"#{time.utc.to_s[0..18]}\""
+ time.nil? ?  "NULL" : "\"#{time.utc.to_s[0..18]}\""
 end
 
 # CREATE TABLE wih.tweets (id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, text VARCHAR(255), time DATETIME, lat DOUBLE, lng DOUBLE);
@@ -52,5 +52,7 @@ tweetstream.locations("-122.519746,37.234702,-121.839967,37.823887") do |status|
     lng = status.place.bounding_box.coordinates[0][0][0].to_f
   end
   # puts "#{status.created_at} - #{lat},#{lng} - #{status.text}"
-  client.query("INSERT INTO tweets (text, time, lat, lng) VALUES (#{status.text}, #{format_time(status.created_at)}, #{lat}, #{lng})")
+  query = "INSERT INTO tweets (text, time, lat, lng) VALUES (\"#{client.escape(status.text)}\", #{format_time(status.created_at)}, #{lat}, #{lng})"
+  puts query
+  client.query query
 end
