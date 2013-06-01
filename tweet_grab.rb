@@ -23,6 +23,8 @@ client = Mysql2::Client.new(:host => config['db']['host'],
 
 tweetstream = TweetStream::Client.new
 
+puts "Start streaming tweets..."
+
 tweetstream.on_error do |message|
   puts "Error: #{message}"
 end
@@ -46,5 +48,5 @@ tweetstream.locations("-122.519746,37.234702,-121.839967,37.823887") do |status|
     lng = status.place.bounding_box.coordinates[0][0][0].to_f
   end
   # puts "#{status.created_at} - #{lat},#{lng} - #{status.text}"
-  query = "INSERT INTO tweets (text, time, lat, lng) VALUES (#{status.text}, #{status.created_at}, #{lat}, #{lng})"
+  client.query("INSERT INTO tweets (text, time, lat, lng) VALUES (#{status.text}, #{status.created_at}, #{lat}, #{lng})")
 end
