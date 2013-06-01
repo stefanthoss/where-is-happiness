@@ -541,7 +541,10 @@ function getData() {
      // push data to MVCArray
      var tweets = jsondata.tweets;
      fromid = jsondata.lastid;
+     console.log('fromid: ' + fromid);
+     console.log('tweets.length: ' + tweets.length);
      for (var i=0; i<tweets.length; i++) {
+       
        tweetData.push(new google.maps.LatLng(tweets[i].lat, tweets[i].lon));
      }
     } else {
