@@ -13,6 +13,10 @@ TweetStream.configure do |twitter_config|
   twitter_config.auth_method        = :oauth
 end
 
+def format_time time
+ time.nil? ?  'NULL' : "\"#{time.utc.to_s[0..18]}\""
+end
+
 # CREATE TABLE wih.tweets (id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, text VARCHAR(255), time DATETIME, lat DOUBLE, lng DOUBLE);
 
 client = Mysql2::Client.new(:host => config['db']['host'],
@@ -48,5 +52,5 @@ tweetstream.locations("-122.519746,37.234702,-121.839967,37.823887") do |status|
     lng = status.place.bounding_box.coordinates[0][0][0].to_f
   end
   # puts "#{status.created_at} - #{lat},#{lng} - #{status.text}"
-  client.query("INSERT INTO tweets (text, time, lat, lng) VALUES (#{status.text}, #{status.created_at}, #{lat}, #{lng})")
+  client.query("INSERT INTO tweets (text, time, lat, lng) VALUES (#{status.text}, #{format_time(status.created_at)}, #{lat}, #{lng})")
 end
