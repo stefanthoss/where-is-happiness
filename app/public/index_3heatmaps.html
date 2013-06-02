@@ -184,17 +184,9 @@ function changeGradient() {
   heatmap.setOptions({
     gradient: heatmap.get('gradient') ? null : gradient
   });
-
-    var gradient2 = [
-    'rgba(255, 0, 0, 1)'
-  ];
   heatmap2.setOptions({
     gradient: heatmap2.get('gradient') ? null : gradient
   });
-
-    var gradient3 = [
-    'rgba(0, 255, 0, 1)'
-  ];
   heatmap3.setOptions({
     gradient: heatmap3.get('gradient') ? null : gradient
   });
@@ -202,8 +194,8 @@ function changeGradient() {
 
 function changeRadius() {
   heatmap.setOptions({radius: heatmap.get('radius') ? null : 20});
-  //heatmap2.setOptions({radius: heatmap2.get('radius') ? null : 20});
-  //heatmap3.setOptions({radius: heatmap3.get('radius') ? null : 20});
+  heatmap2.setOptions({radius: heatmap2.get('radius') ? null : 20});
+  heatmap3.setOptions({radius: heatmap3.get('radius') ? null : 20});
 }
 
 function changeOpacity() {
