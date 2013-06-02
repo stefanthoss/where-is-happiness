@@ -7,7 +7,7 @@ require 'json'
 
 config = YAML.load_file('../config.yml')
 
-# set :environment, :development
+set :environment, :development
 
 get '/slides' do
   redirect "/slides/index.html"
@@ -23,9 +23,9 @@ get '/getstreampoints' do
   points = Hash.new
   points['tweets'] = []
 
-  from_id = params[:fromid].nil? ? -1 : params[:fromid]
+  from_id = params[:fromid].nil? ? -1 : params[:fromid].to_i
 
-  if params[:keyword].nil?
+  if params[:keyword].nil? || params[:keyword].empty?
     points['lastid'] = from_id
     query = "SELECT * FROM tweets WHERE id > #{from_id}"
     tweets = client.query(query)
@@ -40,7 +40,7 @@ get '/getstreampoints' do
       tweets = client.query(query)
       tweets.each do |tweet|
         points['tweets'] << { 'lat' => tweet['lat'], 'lon' => tweet['lng'] }
-        points['lastid'] = [points['lastid'], tweet['id']].max
+        points['lastid'] = [points['lastid'], tweet['id'].to_i].max
       end
     end
   end
