@@ -50,7 +50,7 @@ get '/getpositivepoints' do
 
   from_id = params[:fromid].nil? ? -1 : params[:fromid]
 
-  query = "SELECT * FROM tweets WHERE id > #{from_id} AND mood_pos > 0"
+  query = "SELECT * FROM tweets WHERE id > #{from_id} AND mood_pos > 0 AND mood_neg = 0"
 
   points['lastid'] = from_id
   tweets = client.query(query)
@@ -75,7 +75,7 @@ get '/getnegativepoints' do
 
   from_id = params[:fromid].nil? ? -1 : params[:fromid]
 
-  query = "SELECT * FROM tweets WHERE id > #{from_id} AND mood_neg > 0"
+  query = "SELECT * FROM tweets WHERE id > #{from_id} AND mood_neg > 0 AND mood_pos = 0"
 
   points['lastid'] = from_id
   tweets = client.query(query)
