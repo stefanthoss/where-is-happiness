@@ -15,7 +15,7 @@ words = {}
 
 tweets = client.query(query)
 tweets.each do |tweet|
-  tweet.split(" ").each do |word|
+  tweet['text'].split(" ").each do |word|
     if words[word].nil?
       words[word] = 0
     else
@@ -24,4 +24,7 @@ tweets.each do |tweet|
   end
 end
 
-puts words.sort_by { |w, c| c }
+words_sorted = words.sort_by { |w, c| c }
+
+words_sorted.each do |word|
+  puts "#{word[0].rjust(5, '0')}: #{word[1]}"
