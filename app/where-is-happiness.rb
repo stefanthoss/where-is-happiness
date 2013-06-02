@@ -99,3 +99,23 @@ get '/getnegativepoints' do
   client.close
   points.to_json
 end
+
+get '/getpopulation' do
+  client = Mysql2::Client.new(:host => config['db']['host'],
+    :username => config['db']['username'],
+    :password => config['db']['password'],
+    :database => config['db']['database'],
+    :host => config['db']['host'])
+
+  points = []
+
+  query = "SELECT * FROM population WHERE lng BETWEEN -122.519746 AND -121.839967 AND lat BETWEEN 37.234702 AND 37.823887"
+
+  population = client.query(query)
+  population.each do |point|
+    points << { 'lat' => tweet['lat'], 'lon' => tweet['lng'], 'weight' => tweet['population2000'] }
+  end
+
+  client.close
+  points.to_json
+end
