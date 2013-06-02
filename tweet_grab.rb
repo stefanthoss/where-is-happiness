@@ -1,5 +1,5 @@
 require 'tweetstream'
-require 'afinn_analyzer'
+require './afinn_analyzer'
 require 'yajl'
 require 'yaml'
 require 'mysql2'
@@ -53,7 +53,7 @@ tweetstream.locations("-122.519746,37.234702,-121.839967,37.823887") do |status|
   # else
   #   lat = status.place.bounding_box.coordinates[0][0][1].to_f
   #   lng = status.place.bounding_box.coordinates[0][0][0].to_f
-  # end
+  end
   mood = analyzer.analyze status.text
   # puts "#{status.created_at} - #{lat},#{lng} - #{status.text}"
   query = "INSERT INTO tweets (text, time, lat, lng, mood_pos, mood_neg) VALUES (\"#{client.escape(status.text)}\", #{format_time(status.created_at)}, #{lat}, #{lng}, #{mood[:positive]}, #{mood[:negative]})"
