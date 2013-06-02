@@ -150,6 +150,9 @@ function initialize() {
 
   changeRadius();
   changeGradient();
+
+  toggleHeatmap2();
+  toggleHeatmap3();
 }
 
 function toggleHeatmap() {
@@ -161,7 +164,7 @@ function toggleHeatmap2() {
 }
 
 function toggleHeatmap3() {
-  heatmap2.setMap(heatmap3.getMap() ? null : map);
+  heatmap3.setMap(heatmap3.getMap() ? null : map);
 }
 
 function changeGradient() {
