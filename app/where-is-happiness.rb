@@ -113,7 +113,7 @@ get '/getpopulation' do
 
   population = client.query(query)
   population.each do |point|
-    points << { 'lat' => tweet['lat'], 'lon' => tweet['lng'], 'weight' => tweet['population2000'] }
+    points << { 'lat' => point['lat'], 'lon' => point['lng'], 'weight' => point['population2000'] }
   end
 
   client.close
