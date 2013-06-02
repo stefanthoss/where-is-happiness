@@ -8,9 +8,10 @@
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=visualization"></script>
     <script>
 // Adding 500 Data Points
-var map, pointarray, heatmap;
-var pointarray2, heatmap2;
-var pointarray3, heatmap3;
+var map, pointarray, heatmap; // keyword
+var pointarray2, heatmap2; // positive
+var pointarray3, heatmap3; // negative
+var pointarray4, heatmap4; // census
 
 var fromid = 0;
 var fromid2 = 0;
@@ -42,8 +43,7 @@ function getData() {
      // push data to MVCArray
      var tweets = jsondata.tweets;
      fromid = jsondata.lastid;
-     console.log('fromid: ' + fromid);
-     console.log('tweets.length: ' + tweets.length);
+     console.log('all fromid: ' + fromid + ', tweets.length: ' + tweets.length);
      for (var i=0; i<tweets.length; i++) {
        //console.log('lat: ' + tweets[i].lat + ' lon: ' + tweets[i].lon);
        pointArray.push(new google.maps.LatLng(tweets[i].lat, tweets[i].lon));
@@ -69,8 +69,7 @@ function getData2() {
      // push data to MVCArray
      var tweets = jsondata.tweets;
      fromid2 = jsondata.lastid;
-     console.log('fromid: ' + fromid);
-     console.log('tweets.length: ' + tweets.length);
+     console.log('positive fromid: ' + fromid + ', tweets.length: ' + tweets.length);
      for (var i=0; i<tweets.length; i++) {
        //console.log('lat: ' + tweets[i].lat + ' lon: ' + tweets[i].lon);
        pointArray2.push(new google.maps.LatLng(tweets[i].lat, tweets[i].lon));
@@ -96,8 +95,7 @@ function getData3() {
      // push data to MVCArray
      var tweets = jsondata.tweets;
      fromid3 = jsondata.lastid;
-     console.log('fromid: ' + fromid);
-     console.log('tweets.length: ' + tweets.length);
+     console.log('negative fromid: ' + fromid + ', tweets.length: ' + tweets.length);
      for (var i=0; i<tweets.length; i++) {
        //console.log('lat: ' + tweets[i].lat + ' lon: ' + tweets[i].lon);
        pointArray3.push(new google.maps.LatLng(tweets[i].lat, tweets[i].lon));
@@ -109,6 +107,31 @@ function getData3() {
   }
 
   mygetrequest.open("GET", "/getnegativepoints?fromid=" + fromid3, true);
+  //mygetrequest.open("GET", "/getstreampoints.json", true);
+  mygetrequest.send(null);
+}
+
+function getCensusData() {
+  var mygetrequest = new ajaxRequest();
+  mygetrequest.onreadystatechange = function() {
+   if (mygetrequest.readyState==4) {
+    if (mygetrequest.status==200 || window.location.href.indexOf("http")==-1) {
+     var jsondata = eval("("+mygetrequest.responseText+")");
+
+     // push data to MVCArray
+     var census = jsondata;
+     console.log('census.length: ' + census.length);
+     for (var i=0; i<census.length; i++) {
+       //console.log('lat: ' + tweets[i].lat + ' lon: ' + tweets[i].lon);
+       pointArray4.push(new google.maps.LatLng(census[i].lat, census[i].lon), census[i].weight);
+     }
+    } else {
+     alert("An error has occured making the request");
+    }
+   }
+  }
+
+  mygetrequest.open("GET", "/getpopulation", true);
   //mygetrequest.open("GET", "/getstreampoints.json", true);
   mygetrequest.send(null);
 }
@@ -160,12 +183,20 @@ function initialize() {
   });
   heatmap3.setMap(map);
 
+  pointArray4 = new google.maps.MVCArray();
+  heatmap4 = new google.maps.visualization.HeatmapLayer({
+    data: pointArray4
+  });
+  heatmap4.setMap(map);
+
   changeRadius();
   changeGradient();
 
   toggleHeatmap2();
   toggleHeatmap3();
+  toggleHeatmap4();
 
+  getCensusData();
   getDataLoop();
 }
 
@@ -179,6 +210,10 @@ function toggleHeatmap2() {
 
 function toggleHeatmap3() {
   heatmap3.setMap(heatmap3.getMap() ? null : map);
+}
+
+function toggleHeatmap4() {
+  heatmap4.setMap(heatmap4.getMap() ? null : map);
 }
 
 function changeGradient() {
@@ -247,12 +282,14 @@ function changeRadius() {
   heatmap.setOptions({radius: heatmap.get('radius') ? null : 20});
   heatmap2.setOptions({radius: heatmap2.get('radius') ? null : 20});
   heatmap3.setOptions({radius: heatmap3.get('radius') ? null : 20});
+  heatmap4.setOptions({radius: heatmap4.get('radius') ? null : 20});
 }
 
 function changeOpacity() {
   heatmap.setOptions({opacity: heatmap.get('opacity') ? null : 0.2});
   heatmap2.setOptions({opacity: heatmap2.get('opacity') ? null : 0.2});
   heatmap3.setOptions({opacity: heatmap3.get('opacity') ? null : 0.2});
+  heatmap4.setOptions({opacity: heatmap4.get('opacity') ? null : 0.2});
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
@@ -264,10 +301,11 @@ google.maps.event.addDomListener(window, 'load', initialize);
     <div id="panel" style="height: 35px; align: center; left: 500px;">
         <b style="font-size: 20px; vertical-align: middle;">Where is Happiness?</b>
         <input type="text" name="keyword" id="keyword" placeholder="Keywords" />
-        <button class="btn awesome" onclick="resetData()">Load Data</button>
+        <button class="btn awesome" onclick="resetData()">Reset Data</button>
         <button class="btn btn-primary" onclick="toggleHeatmap()">Toggle All</button>
         <button class="btn btn-success" onclick="toggleHeatmap2()">Toggle Positive</button>
         <button class="btn btn-danger" onclick="toggleHeatmap3()">Toggle Negative</button>
+        <button class="btn btn-primary" onclick="toggleHeatmap4()">Toggle Population</button>
         <!-- <button onclick="changeGradient()">Change gradient</button> -->
         <!-- <button onclick="changeRadius()">Change radius</button> -->
         <!-- <button onclick="changeOpacity()">Change opacity</button> -->
