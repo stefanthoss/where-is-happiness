@@ -27,6 +27,7 @@ client = Mysql2::Client.new(:host => config['db']['host'],
     query = "SELECT * FROM tweets WHERE id > #{from_id}"
   end
 
+  points['lastid'] = from_id
   tweets = client.query(query)
   tweets.each do |tweet|
     points['tweets'] << { 'lat' => tweet['lat'], 'lon' => tweet['lng'] }
