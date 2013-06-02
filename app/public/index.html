@@ -123,7 +123,8 @@ function getCensusData() {
      console.log('census.length: ' + census.length);
      for (var i=0; i<census.length; i++) {
        //console.log('lat: ' + tweets[i].lat + ' lon: ' + tweets[i].lon);
-       pointArray4.push(new google.maps.visualization.WeightedLocation(new google.maps.LatLng(census[i].lat, census[i].lon), census[i].weight));
+       //pointArray4.push(new google.maps.visualization.WeightedLocation(new google.maps.LatLng(census[i].lat, census[i].lon), census[i].weight));
+       pointArray4.push({location: new google.maps.LatLng(census[i].lat, census[i].lon), weight: census[i].weight});
      }
     } else {
      alert("An error has occured making the request");
