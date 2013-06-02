@@ -56,7 +56,9 @@ tweetstream.locations("-122.519746,37.234702,-121.839967,37.823887") do |status|
   end
   mood = analyzer.analyze status.text
   # puts "#{status.created_at} - #{lat},#{lng} - #{status.text}"
-  query = "INSERT INTO tweets (text, time, lat, lng, mood_pos, mood_neg) VALUES (\"#{client.escape(status.text)}\", #{format_time(status.created_at)}, #{lat}, #{lng}, #{mood[:positive]}, #{mood[:negative]})"
-  puts query
-  client.query query
+  unless lat.nil? || lng.nil?
+    query = "INSERT INTO tweets (text, time, lat, lng, mood_pos, mood_neg) VALUES (\"#{client.escape(status.text)}\", #{format_time(status.created_at)}, #{lat}, #{lng}, #{mood[:positive]}, #{mood[:negative]})"
+    puts query
+    client.query query
+  end
 end
