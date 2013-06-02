@@ -582,8 +582,7 @@ function toggleHeatmap() {
 
 function changeGradient() {
   var gradient = [
-    'rgba(0, 255, 0, 0)' ];
-    /*
+    'rgba(0, 255, 0, 0)',
     'rgba(0, 255, 0, 1)' ];
     /*
     'rgba(0, 191, 255, 1)',
@@ -609,6 +608,11 @@ function changeRadius() {
   heatmap.setOptions({radius: heatmap.get('radius') ? null : 20});
 }
 
+function changeDissipating() {
+  heatmap.setOptions({dissipating: !heatmap.get('dissipating')});
+}
+
+
 function changeOpacity() {
   heatmap.setOptions({opacity: heatmap.get('opacity') ? null : 0.2});
 }
@@ -625,6 +629,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
       <button onclick="changeGradient()">Change gradient</button>
       <button onclick="changeRadius()">Change radius</button>
       <button onclick="changeOpacity()">Change opacity</button>
+      <button onclick="changeDissipating()">Change dissipating</button>
     </div>
     <div id="map-canvas"></div>
   </body>

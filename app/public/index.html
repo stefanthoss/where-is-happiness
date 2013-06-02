@@ -119,6 +119,7 @@ function getAllData() {
 }
 
 function getDataLoop() {
+  console.log('starting loop: 5000ms');
   setInterval(getAllData, 5000);
 }
 
@@ -190,14 +191,38 @@ function changeGradient() {
 
     var gradient2 = [
     'rgba(0, 255, 0, 0)',
-    'rgba(0, 255, 0, 1)'
+    'rgba(0, 255, 0, 1)',
+    'rgba(0, 191, 0, 1)',
+    'rgba(0, 127, 0, 1)',
+    'rgba(0, 63, 0, 1)',
+    'rgba(0, 0, 255, 1)',
+    'rgba(0, 0, 223, 1)',
+    'rgba(0, 0, 191, 1)',
+    'rgba(0, 0, 159, 1)',
+    'rgba(0, 0, 127, 1)',
+    'rgba(63, 0, 91, 1)',
+    'rgba(127, 0, 63, 1)',
+    'rgba(191, 0, 31, 1)',
+    'rgba(255, 0, 0, 1)'
   ];
   heatmap2.setOptions({
     gradient: heatmap2.get('gradient') ? null : gradient2
   });
 
     var gradient3 = [
-    'rgba(255, 0, 0, 0)',
+    'rgba(255, 0, 255, 0)',
+    'rgba(255, 0, 255, 1)',
+    'rgba(191, 0, 255, 1)',
+    'rgba(127, 0, 255, 1)',
+    'rgba(63, 0, 255, 1)',
+    'rgba(0, 0, 255, 1)',
+    'rgba(0, 0, 223, 1)',
+    'rgba(0, 0, 191, 1)',
+    'rgba(0, 0, 159, 1)',
+    'rgba(0, 0, 127, 1)',
+    'rgba(63, 0, 91, 1)',
+    'rgba(127, 0, 63, 1)',
+    'rgba(191, 0, 31, 1)',
     'rgba(255, 0, 0, 1)'
   ];
   heatmap3.setOptions({
