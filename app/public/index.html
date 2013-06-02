@@ -8,9 +8,12 @@
     <script>
 // Adding 500 Data Points
 var map, pointarray, heatmap;
+var pointarray2, heatmap2;
+var pointarray3, heatmap3;
+
 var fromid = 0;
-
-
+var fromid2 = 0;
+var fromid3 = 0;
 
 function ajaxRequest() {
    var activexmodes = ["Msxml2.XMLHTTP", "Microsoft.XMLHTTP"];
@@ -55,9 +58,68 @@ function getData() {
   mygetrequest.send(null);
 }
 
+function getData2() {
+  var mygetrequest = new ajaxRequest();
+  mygetrequest.onreadystatechange = function() {
+   if (mygetrequest.readyState==4) {
+    if (mygetrequest.status==200 || window.location.href.indexOf("http")==-1) {
+     var jsondata = eval("("+mygetrequest.responseText+")");
+
+     // push data to MVCArray
+     var tweets = jsondata.tweets;
+     fromid2 = jsondata.lastid;
+     console.log('fromid: ' + fromid);
+     console.log('tweets.length: ' + tweets.length);
+     for (var i=0; i<tweets.length; i++) {
+       //console.log('lat: ' + tweets[i].lat + ' lon: ' + tweets[i].lon);
+       pointArray2.push(new google.maps.LatLng(tweets[i].lat, tweets[i].lon));
+     }
+    } else {
+     alert("An error has occured making the request");
+    }
+   }
+  }
+
+  mygetrequest.open("GET", "/getpositivepoints?keyword=&fromid=" + fromid2, true);
+  //mygetrequest.open("GET", "/getstreampoints.json", true);
+  mygetrequest.send(null);
+}
+
+function getData3() {
+  var mygetrequest = new ajaxRequest();
+  mygetrequest.onreadystatechange = function() {
+   if (mygetrequest.readyState==4) {
+    if (mygetrequest.status==200 || window.location.href.indexOf("http")==-1) {
+     var jsondata = eval("("+mygetrequest.responseText+")");
+
+     // push data to MVCArray
+     var tweets = jsondata.tweets;
+     fromid3 = jsondata.lastid;
+     console.log('fromid: ' + fromid);
+     console.log('tweets.length: ' + tweets.length);
+     for (var i=0; i<tweets.length; i++) {
+       //console.log('lat: ' + tweets[i].lat + ' lon: ' + tweets[i].lon);
+       pointArray3.push(new google.maps.LatLng(tweets[i].lat, tweets[i].lon));
+     }
+    } else {
+     alert("An error has occured making the request");
+    }
+   }
+  }
+
+  mygetrequest.open("GET", "/getnegativepoints?keyword=&fromid=" + fromid3, true);
+  //mygetrequest.open("GET", "/getstreampoints.json", true);
+  mygetrequest.send(null);
+}
+
+function getAllData() {
+  getData();
+  getData2();
+  getData3();
+}
 
 function getDataLoop() {
-  setInterval(getData, 5000);
+  setInterval(getAllData, 5000);
 }
 
 
@@ -73,12 +135,33 @@ function initialize() {
     data: pointArray
   });
   heatmap.setMap(map);
+
+  pointArray2 = new google.maps.MVCArray();
+  heatmap2 = new google.maps.visualization.HeatmapLayer({
+    data: pointArray2
+  });
+  heatmap2.setMap(map);
+
+  pointArray3 = new google.maps.MVCArray();
+  heatmap3 = new google.maps.visualization.HeatmapLayer({
+    data: pointArray3
+  });
+  heatmap3.setMap(map);
+
   changeRadius();
   changeGradient();
 }
 
 function toggleHeatmap() {
   heatmap.setMap(heatmap.getMap() ? null : map);
+}
+
+function toggleHeatmap2() {
+  heatmap2.setMap(heatmap2.getMap() ? null : map);
+}
+
+function toggleHeatmap3() {
+  heatmap2.setMap(heatmap3.getMap() ? null : map);
 }
 
 function changeGradient() {
@@ -97,18 +180,28 @@ function changeGradient() {
     'rgba(127, 0, 63, 1)',
     'rgba(191, 0, 31, 1)',
     'rgba(255, 0, 0, 1)'
-  ]
+  ];
   heatmap.setOptions({
     gradient: heatmap.get('gradient') ? null : gradient
+  });
+  heatmap2.setOptions({
+    gradient: heatmap2.get('gradient') ? null : gradient
+  });
+  heatmap3.setOptions({
+    gradient: heatmap3.get('gradient') ? null : gradient
   });
 }
 
 function changeRadius() {
   heatmap.setOptions({radius: heatmap.get('radius') ? null : 20});
+  heatmap2.setOptions({radius: heatmap2.get('radius') ? null : 20});
+  heatmap3.setOptions({radius: heatmap3.get('radius') ? null : 20});
 }
 
 function changeOpacity() {
   heatmap.setOptions({opacity: heatmap.get('opacity') ? null : 0.2});
+  heatmap2.setOptions({opacity: heatmap2.get('opacity') ? null : 0.2});
+  heatmap3.setOptions({opacity: heatmap3.get('opacity') ? null : 0.2});
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
@@ -119,7 +212,9 @@ google.maps.event.addDomListener(window, 'load', initialize);
   <body>
     <div id="panel">
       <button onclick="getDataLoop()">Load Data</button>
-      <button onclick="toggleHeatmap()">Toggle Heatmap</button>
+      <button onclick="toggleHeatmap()">Toggle Happy</button>
+      <button onclick="toggleHeatmap()">Toggle Positive</button>
+      <button onclick="toggleHeatmap()">Toggle Negative</button>
       <button onclick="changeGradient()">Change gradient</button>
       <button onclick="changeRadius()">Change radius</button>
       <button onclick="changeOpacity()">Change opacity</button>
