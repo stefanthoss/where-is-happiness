@@ -9,6 +9,10 @@ config = YAML.load_file('../config.yml')
 
 # set :environment, :development
 
+get '/slides' do
+  redirect "/slides/index.html"
+end
+
 get '/getstreampoints' do
   client = Mysql2::Client.new(:host => config['db']['host'],
     :username => config['db']['username'],
