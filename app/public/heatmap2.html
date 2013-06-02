@@ -531,6 +531,11 @@ function ajaxRequest() {
 
 
 function getData() {
+
+  console.log(document.getElementById('keyword').value);
+  //console.log(document.querySelector('#keyword').value);
+
+
   var mygetrequest = new ajaxRequest();
   mygetrequest.onreadystatechange = function() {
    if (mygetrequest.readyState==4) {
@@ -624,13 +629,13 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
   <body>
     <div id="panel">
-      <button onclick="loadData()">Load Data</button>
+      <button onclick="getData()">Load Data</button>
       <button onclick="toggleHeatmap()">Toggle Heatmap</button>
       <button onclick="changeGradient()">Change gradient</button>
       <button onclick="changeRadius()">Change radius</button>
       <button onclick="changeOpacity()">Change opacity</button>
       <button onclick="changeDissipating()">Change dissipating</button>
-      <input type="text" name="keyword">
+      <input type="text" name="keyword" id="keyword">
     </div>
     <div id="map-canvas"></div>
   </body>
