@@ -25,18 +25,26 @@ get '/getstreampoints' do
 
   from_id = params[:fromid].nil? ? -1 : params[:fromid]
 
-  unless params[:keyword].nil?
-    query = "SELECT * FROM tweets WHERE id > #{from_id} AND text LIKE \"%#{params[:keyword]}%\""
-  else
+  if params[:keyword].nil?
+    points['lastid'] = from_id
     query = "SELECT * FROM tweets WHERE id > #{from_id}"
+    tweets = client.query(query)
+    tweets.each do |tweet|
+      points['tweets'] << { 'lat' => tweet['lat'], 'lon' => tweet['lng'] }
+      points['lastid'] = tweet['id']
+    end
+  else
+    points['lastid'] = from_id
+    params[:keyword].split(',').each do |keyword|
+      query = "SELECT * FROM tweets WHERE id > #{from_id} AND text LIKE \"%#{keyword}%\""
+      tweets = client.query(query)
+      tweets.each do |tweet|
+        points['tweets'] << { 'lat' => tweet['lat'], 'lon' => tweet['lng'] }
+        points['lastid'] = [points['lastid'], tweet['id']].max
+      end
+    end
   end
 
-  points['lastid'] = from_id
-  tweets = client.query(query)
-  tweets.each do |tweet|
-    points['tweets'] << { 'lat' => tweet['lat'], 'lon' => tweet['lng'] }
-    points['lastid'] = tweet['id']
-  end
 
   client.close
   points.to_json
