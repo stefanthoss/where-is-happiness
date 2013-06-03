@@ -1,3 +1,8 @@
 Where is Happiness?
 ===================
-A map that shows the happiness of people. Made with Ruby and Google Maps.
+Social heatmaps - get a sense of what's happening in your neighbourhood and find interesting things about the local community in realtime by analyzing social posts in realtime.
+
+Data sources
+============
+* Tweets from https://dev.twitter.com/docs/streaming-apis
+* Population from http://www.ncdc.noaa.gov/oa/climate/research/population/popdata.html

@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <title>Where is Happiness?</title>
     <link href="https://developers.google.com/maps/documentation/javascript/examples/default.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="bootstrap.css">
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=visualization"></script>
     <script>
 // Adding 500 Data Points
@@ -300,7 +299,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
   </head>
 
   <body>
-    <div id="panel" style="height: 35px; align: center; left: 500px;">
+    <div id="panel">
         <b style="font-size: 20px; vertical-align: middle;">Where is Happiness?</b>
         <input type="text" name="keyword" id="keyword" placeholder="Keywords" />
         <button class="btn awesome" onclick="resetData()">Reset Data</button>
@@ -311,6 +310,8 @@ google.maps.event.addDomListener(window, 'load', initialize);
         <!-- <button onclick="changeGradient()">Change gradient</button> -->
         <!-- <button onclick="changeRadius()">Change radius</button> -->
         <!-- <button onclick="changeOpacity()">Change opacity</button> -->
+        <br />
+        An <a href="http://www.hackforchange.org/google-hack-change">Google Hack for Change</a> project. <a href="slides/">Presentation slides</a>. 41656 tweets collected from 2013-06-01 15:12:46 PDT until 2013-06-02 17:21:33 PDT.
     </div>
     <div id="map-canvas"></div>
   </body>
